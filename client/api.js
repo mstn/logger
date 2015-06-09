@@ -2,6 +2,7 @@ Logger = {};
 
 _.each(['info', 'error', 'warn', 'trace'], function(level){
   Logger[level] = function (msg, event, callback) {
+    debug(level, msg, event);
     Logger.log(level, msg, event, callback);
   };
 });
@@ -15,6 +16,37 @@ var applyLogHandlers = function(event){
   return event;
 };
 
+var debug = function(level, msg, event){
+  if (Logger.debug){
+    switch(level){
+      case 'error':
+        console.error(msg, event);
+        break;
+      case 'warn':
+        console.warn(msg, event);
+        break;
+      default:
+        console.debug(msg, event);
+    }
+  }
+};
+
+/**
+ *  available options
+ *
+ *     unhandledErrors:false
+ *     debug:false
+ */
+Logger.config = function(options){
+  options = options || {};
+
+  if (options.unhandledErrors){
+    Logger.catchUnhandledErrors();
+  }
+
+  this.debug = options.debug;
+};
+
 Logger.add = function(name, handler){
   this._handlers[ name ] = handler;
 };
@@ -24,7 +56,6 @@ Logger.add('addClientDate', function(event){
     clientDate: new Date
   });
 });
-
 
 Logger.log = function (level, msg, event, callback) {
   event = event || {};
