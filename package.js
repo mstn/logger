@@ -17,6 +17,7 @@ Npm.depends({
 Package.onUse(function(api) {
   api.versionsFrom('1.1');
   api.use('underscore');
+  api.use('ddp');
   api.addFiles('client/api.js', 'client');
   api.addFiles('server/api.js', 'server');
   api.export('Logger');
